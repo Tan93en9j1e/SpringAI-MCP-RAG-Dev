@@ -10,6 +10,15 @@ spring:
       chat:
         options:
           model: ${OPENAI_MODEL}.env
+    vectorstore:
+      redis:
+        initialize-schema: true
+        index-name: lee-vectorstore
+        prefix: 'embedding:'
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
 
 logging:
   level:
