@@ -24,4 +24,13 @@ public interface DocumentService {
      * @param fileName
      **/
     public List<Document> loadText (Resource resource, String fileName);
+
+    /**
+     * TODO:根据提问从知识库中查询相关文档
+     * @author tmj
+     * @since 2026/6/25 22:07
+     * @param question
+     * @return java.util.List<org.springframework.ai.document.Document>
+     **/
+    public List<Document> doSearch (String question);
 }

@@ -4,10 +4,7 @@ import com.tang.service.DocumentService;
 import com.tang.utils.LeeResult;
 import jakarta.annotation.Resource;
 import org.springframework.ai.document.Document;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -32,5 +29,10 @@ public class RagController {
     public LeeResult uploadRagDoc(@RequestParam("file")MultipartFile file) {
         List<Document> documentList = documentService.loadText(file.getResource(), file.getOriginalFilename());
         return LeeResult.ok(documentList);
+    }
+
+    @GetMapping("/doSearch")
+    public LeeResult doSearch(@RequestParam String question) {
+        return LeeResult.ok(documentService.doSearch(question));
     }
 }

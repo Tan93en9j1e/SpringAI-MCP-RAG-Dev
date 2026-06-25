@@ -50,4 +50,9 @@ public class DocumentServiceImpl implements DocumentService {
 
         return documentList;
     }
+
+    @Override
+    public List<Document> doSearch(String question) {
+        return redisVectorStore.similaritySearch(question);
+    }
 }
