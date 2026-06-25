@@ -1,5 +1,7 @@
 package com.tang.controller;
 
+import com.tang.service.ChatService;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,8 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class HelloController {
 
+    @Resource
+    private ChatService chatService;
+
     @GetMapping("world" )
     public String world(){
         return "hello world";
+    }
+
+    @GetMapping("chat")
+    public String chat(String msg){
+        return chatService.chatTest(msg);
     }
 }
