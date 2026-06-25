@@ -1,5 +1,6 @@
 package com.tang.service;
 
+import com.tang.controller.bean.ChatEntity;
 import org.springframework.ai.chat.model.ChatResponse;
 import reactor.core.publisher.Flux;
 
@@ -43,4 +44,13 @@ public interface ChatService {
      * @since 2026/6/25 14:55
      **/
     public Flux<String> streamStr(String prompt);
+
+    /**
+     * TODO:和大模型交互聊天
+     *
+     * @param chatEntity
+     * @author tmj
+     * @since 2026/6/25 20:43
+     **/
+    public void doChat(ChatEntity chatEntity);
 }

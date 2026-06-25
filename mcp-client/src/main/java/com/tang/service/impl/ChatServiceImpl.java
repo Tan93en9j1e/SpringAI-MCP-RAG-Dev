@@ -1,10 +1,17 @@
 package com.tang.service.impl;
 
+import com.tang.controller.bean.ChatEntity;
+import com.tang.enums.SSEMsgType;
 import com.tang.service.ChatService;
+import com.tang.utils.SSEServer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * ProjectName: SpringAI-MCP-RAG-Dev
@@ -16,6 +23,7 @@ import reactor.core.publisher.Flux;
  * Description:
  */
 @Service
+@Slf4j
 public class ChatServiceImpl implements ChatService {
 
     private ChatClient chatClient;
@@ -70,5 +78,22 @@ public class ChatServiceImpl implements ChatService {
 //            throw new RuntimeException(e);
 //        }
         return chatClient.prompt(prompt).stream().content();
+    }
+
+    @Override
+    public void doChat(ChatEntity chatEntity) {
+
+        String userId = chatEntity.getCurrentUserName();
+        String prompt = chatEntity.getMessage();
+        String botMsgId = chatEntity.getBotMsgId();
+
+        Flux<String> stringFlux = chatClient.prompt(prompt).stream().content();
+
+        List<String> list = stringFlux.toStream().map(chatResponse -> {
+            String content = chatResponse.toString();
+            SSEServer.sendMsg(userId, content, SSEMsgType.ADD);
+            log.info("content:{}", content);
+            return content;
+        }).collect(Collectors.toList());
     }
 }
