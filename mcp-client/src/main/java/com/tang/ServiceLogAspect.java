@@ -5,6 +5,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 /**
  * ProjectName: SpringAI-MCP-RAG-Dev
@@ -38,16 +39,19 @@ public class ServiceLogAspect {
     @Around("execution(* com.tang.service.impl..*.*(..))")
     public Object recordTimeLog(ProceedingJoinPoint joinPoint) throws Throwable {
 
-        long begin = System.currentTimeMillis();
+//        long begin = System.currentTimeMillis();
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
 
         Object proceed = joinPoint.proceed();
         String point = joinPoint.getTarget().getClass().getName()
                 + "."
                 + joinPoint.getSignature().getName();
 
-        long end = System.currentTimeMillis();
-
-        long takeTime = end - begin;
+//        long end = System.currentTimeMillis();
+        stopWatch.stop();
+//        long takeTime = end - begin;
+        long takeTime = stopWatch.getTotalTimeMillis();
 
         if (takeTime > 3000) {
             log.error("{}.{} 耗时: {}ms", point, takeTime);
