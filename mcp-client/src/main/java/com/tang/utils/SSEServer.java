@@ -71,6 +71,22 @@ public class SSEServer {
     }
 
     /**
+     * TODO:消息群发
+     *
+     * @param message
+     * @author tmj
+     * @since 2026/6/25 20:31
+     **/
+    public static void sendMsgToAllUsers(String message) {
+        if (CollectionUtils.isEmpty(sseClients)) {
+            return;
+        }
+        sseClients.forEach((userId, sseEmitter) -> {
+            sendEmitterMessage(sseEmitter, userId, message, SSEMsgType.MESSAGE);
+        });
+    }
+
+    /**
      * TODO:发送消息
      *
      * @param sseEmitter
