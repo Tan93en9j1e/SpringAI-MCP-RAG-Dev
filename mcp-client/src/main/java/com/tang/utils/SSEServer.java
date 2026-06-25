@@ -1,8 +1,11 @@
 package com.tang.utils;
 
+import com.tang.enums.SSEMsgType;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -46,6 +49,50 @@ public class SSEServer {
 
         return sseEmitter;
     }
+
+    /**
+     * TODO:发送消息
+     *
+     * @param userId
+     * @param message
+     * @param msgType
+     * @author tmj
+     * @since 2026/6/25 17:34
+     **/
+    public static void sendMsg(String userId, String message, SSEMsgType msgType) {
+        if (CollectionUtils.isEmpty(sseClients)) {
+            return;
+        }
+
+        if (sseClients.containsKey(userId)) {
+            SseEmitter sseEmitter = sseClients.get(userId);
+            sendEmitterMessage(sseEmitter, userId, message, msgType);
+        }
+    }
+
+    /**
+     * TODO:发送消息
+     *
+     * @param sseEmitter
+     * @param userId
+     * @param message
+     * @param msgType
+     * @author tmj
+     * @since 2026/6/25 17:34
+     **/
+    public static void sendEmitterMessage(SseEmitter sseEmitter, String userId, String message, SSEMsgType msgType) {
+        try {
+            SseEmitter.SseEventBuilder event = SseEmitter.event()
+                    .data(message)
+                    .id(userId)
+                    .name(msgType.type);
+            sseEmitter.send(msgType);
+        } catch (IOException e) {
+            log.error("User {} send error{}", userId, e.getMessage());
+            remove(userId);
+        }
+    }
+
 
     /**
      * TODO:超时回调函数
