@@ -2,7 +2,10 @@ package com.tang.service;
 
 import com.tang.bean.ChatEntity;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.document.Document;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 /**
  * ProjectName: SpringAI-MCP-RAG-Dev
@@ -53,4 +56,14 @@ public interface ChatService {
      * @since 2026/6/25 20:43
      **/
     public void doChat(ChatEntity chatEntity);
+
+    /**
+     * TODO:rag知识库检索汇总给大模型输出
+     *
+     * @param chatEntity
+     * @param ragContext
+     * @author tmj
+     * @since 2026/6/25 22:15
+     **/
+    public void doChatRagSearch(ChatEntity chatEntity, List<Document> ragContext);
 }
