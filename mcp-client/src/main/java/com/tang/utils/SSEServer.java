@@ -42,6 +42,8 @@ public class SSEServer {
 
         sseClients.put(userId, sseEmitter);
 
+        log.info("Connected user: {}", userId);
+
         return sseEmitter;
     }
 
