@@ -2,7 +2,9 @@ package com.tang.service.impl;
 
 import com.tang.service.ChatService;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 /**
  * ProjectName: SpringAI-MCP-RAG-Dev
@@ -19,6 +21,11 @@ public class ChatServiceImpl implements ChatService {
     private ChatClient chatClient;
 
     private String systemPrompt ="You are a helpful assistant.";
+
+    //提示词三大模型
+    //system
+    //user
+    //assistant
 
     /**
      * TODO:构造器注入，自动配置
@@ -37,5 +44,16 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public String chatTest(String prompt) {
         return chatClient.prompt(prompt).call().content();
+    }
+
+
+    @Override
+    public Flux<ChatResponse> streamResponse(String prompt) {
+        return chatClient.prompt(prompt).stream().chatResponse();
+    }
+
+    @Override
+    public Flux<String> streamStr(String prompt) {
+        return chatClient.prompt(prompt).stream().content();
     }
 }
