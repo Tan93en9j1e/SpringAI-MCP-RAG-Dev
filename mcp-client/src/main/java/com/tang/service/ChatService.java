@@ -1,6 +1,6 @@
 package com.tang.service;
 
-import com.tang.controller.bean.ChatEntity;
+import com.tang.bean.ChatEntity;
 import org.springframework.ai.chat.model.ChatResponse;
 import reactor.core.publisher.Flux;
 

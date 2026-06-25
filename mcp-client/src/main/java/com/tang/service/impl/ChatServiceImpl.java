@@ -1,6 +1,8 @@
 package com.tang.service.impl;
 
-import com.tang.controller.bean.ChatEntity;
+import cn.hutool.json.JSONUtil;
+import com.tang.bean.ChatEntity;
+import com.tang.bean.ChatResponseEntity;
 import com.tang.enums.SSEMsgType;
 import com.tang.service.ChatService;
 import com.tang.utils.SSEServer;
@@ -95,5 +97,11 @@ public class ChatServiceImpl implements ChatService {
             log.info("content:{}", content);
             return content;
         }).collect(Collectors.toList());
+
+        String fullContent = list.stream().collect(Collectors.joining());
+
+        ChatResponseEntity chatResponseEntity = new ChatResponseEntity(fullContent, botMsgId);
+
+        SSEServer.sendMsg(userId, JSONUtil.toJsonStr(chatResponseEntity), SSEMsgType.FINISH);
     }
 }

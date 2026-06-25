@@ -1,4 +1,4 @@
-package com.tang.controller.bean;
+package com.tang.bean;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

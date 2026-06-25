@@ -1,6 +1,6 @@
 package com.tang.controller;
 
-import com.tang.controller.bean.ChatEntity;
+import com.tang.bean.ChatEntity;
 import com.tang.service.ChatService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.PostMapping;
