@@ -1,9 +1,8 @@
-server:
-  port: 8080
-
 spring:
   application:
     name: spring-ai-mcp-client
+  profiles:
+    active: dev
 
 logging:
   level:
