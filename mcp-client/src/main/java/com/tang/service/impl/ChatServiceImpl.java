@@ -20,7 +20,7 @@ public class ChatServiceImpl implements ChatService {
 
     private ChatClient chatClient;
 
-    private String systemPrompt ="You are a helpful assistant.";
+    private String systemPrompt = "You are a helpful assistant.";
 
     //提示词三大模型
     //system
@@ -43,17 +43,32 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public String chatTest(String prompt) {
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return chatClient.prompt(prompt).call().content();
     }
 
 
     @Override
     public Flux<ChatResponse> streamResponse(String prompt) {
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return chatClient.prompt(prompt).stream().chatResponse();
     }
 
     @Override
     public Flux<String> streamStr(String prompt) {
+        try {
+            Thread.sleep(6000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         return chatClient.prompt(prompt).stream().content();
     }
 }
