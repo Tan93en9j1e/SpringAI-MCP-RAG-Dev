@@ -15,6 +15,18 @@ spring:
         initialize-schema: true
         index-name: lee-vectorstore
         prefix: 'embedding:'
+    mcp:
+      client:
+        enabled: true
+        name: spring-ai-mcp-client
+        type: async
+        sse:
+          connections:
+            server1:
+              url: https://mcp.amap.com
+              sse-endpoint: /sse?key=88fa009929fb2b277104b3aca6d9ce59
+        stdio:
+          servers-configuration: classpath:mcp-server.json
   data:
     redis:
       host: 127.0.0.1

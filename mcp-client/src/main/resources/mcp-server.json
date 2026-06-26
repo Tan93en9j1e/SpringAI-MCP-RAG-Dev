@@ -1,0 +1,12 @@
+{
+  "mcpServer": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/Volumes/tmj/docker"
+      ]
+    }
+  }
+}
