@@ -28,4 +28,4 @@ internet:
   websearch:
     searxng:
       url: http://localhost:6080/search
-      counts: 25
+      counts: 10

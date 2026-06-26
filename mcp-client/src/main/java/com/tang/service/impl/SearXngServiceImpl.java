@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -65,7 +66,7 @@ public class SearXngServiceImpl implements SearXngService {
             if (response.body() != null) {
                 String responseBody = response.body().string();
                 SearXNGResponse searXNGResponse = JSONUtil.toBean(responseBody, SearXNGResponse.class);
-                return searXNGResponse.getResults();
+                return dealResult(searXNGResponse.getResults());
             }
             log.error("搜索失败: {}", response.message());
         } catch (IOException e) {
@@ -73,5 +74,21 @@ public class SearXngServiceImpl implements SearXngService {
         }
 
         return Collections.emptyList();
+    }
+
+    /**
+     * TODO:处理结构集，截取限制的个数
+     *
+     * @param results
+     * @return java.util.List<com.tang.bean.SearchResult>
+     * @author tmj
+     * @since 2026/6/26 13:19
+     **/
+    private List<SearchResult> dealResult(List<SearchResult> results) {
+
+        return results.subList(0, Math.min(COUNTS, results.size()))
+                .parallelStream()
+                .sorted(Comparator.comparingDouble(SearchResult::getScore).reversed())
+                .limit(COUNTS).toList();
     }
 }
