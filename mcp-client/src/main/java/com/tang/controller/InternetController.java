@@ -1,7 +1,10 @@
 package com.tang.controller;
 
+import com.tang.bean.ChatEntity;
+import com.tang.service.ChatService;
 import com.tang.service.SearXngService;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,8 +23,17 @@ public class InternetController {
     @Resource
     private SearXngService searXngService;
 
+    @Resource
+    private ChatService chatService;
+
     @GetMapping("test")
     public Object test(@RequestParam("query") String query) {
         return searXngService.search(query);
+    }
+
+    @PostMapping("search")
+    public void search(@RequestBody ChatEntity chatEntity, HttpServletResponse response) {
+        response.setCharacterEncoding("UTF-8");
+        chatService.doInternetSearch(chatEntity);
     }
 }

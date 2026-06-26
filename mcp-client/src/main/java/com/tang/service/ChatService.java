@@ -66,4 +66,14 @@ public interface ChatService {
      * @since 2026/6/25 22:15
      **/
     public void doChatRagSearch(ChatEntity chatEntity, List<Document> ragContext);
+
+    /**
+     * TODO:基于SearXng的互联网搜索
+     *
+     * @param chatEntity
+     * @author tmj
+     * @since 2026/6/26 20:21
+     **/
+    public void doInternetSearch(ChatEntity chatEntity);
+
 }
