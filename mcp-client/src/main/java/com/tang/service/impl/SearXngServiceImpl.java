@@ -1,15 +1,20 @@
 package com.tang.service.impl;
 
+import cn.hutool.json.JSONUtil;
+import com.tang.bean.SearXNGResponse;
 import com.tang.bean.SearchResult;
 import com.tang.service.SearXngService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -37,6 +42,7 @@ public class SearXngServiceImpl implements SearXngService {
     @Override
     public List<SearchResult> search(String query) {
 
+        // 构建搜索的url
         HttpUrl url = HttpUrl.get(SEARXNG_URL)
                 .newBuilder()
                 .addQueryParameter("q", query)
@@ -45,8 +51,27 @@ public class SearXngServiceImpl implements SearXngService {
 
         log.info("搜索的url: {}", url.url());
 
-//        okHttpClient.newCall()
+        // 创建请求对象
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        // 执行请求
+        try (Response response = okHttpClient.newCall(request).execute()) {
 
-        return List.of();
+            // 判断响应是否成功
+            if (!response.isSuccessful()) throw new RuntimeException("请求失败:HTTP " + response.code());
+
+            // 获取响应体
+            if (response.body() != null) {
+                String responseBody = response.body().string();
+                SearXNGResponse searXNGResponse = JSONUtil.toBean(responseBody, SearXNGResponse.class);
+                return searXNGResponse.getResults();
+            }
+            log.error("搜索失败: {}", response.message());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return Collections.emptyList();
     }
 }
