@@ -5,11 +5,27 @@ spring:
     active: dev
   ai:
     mcp:
-     server:
-       name: spring-ai-mcp-server-sse
-       version: 1.0.0
-       sse-endpoint: /sse
-       type: async
+      server:
+        name: spring-ai-mcp-server-sse
+        version: 1.0.0
+        sse-endpoint: /sse
+        type: async
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 3956842864@qq.com
+    password: utuxayepvnbzcfhi
+    protocol: smtp
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+          ssl:
+            enable: true
+
 
 logging:
   level:
