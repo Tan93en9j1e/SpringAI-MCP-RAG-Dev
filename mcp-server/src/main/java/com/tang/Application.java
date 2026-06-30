@@ -1,6 +1,7 @@
 package com.tang;
 
 import com.tang.mcp.tool.DateTool;
+import com.tang.mcp.tool.EmailTool;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.boot.SpringApplication;
@@ -23,15 +24,16 @@ public class Application {
     }
 
     /**
-     * TODO:注册MCP工具
+     * TODO:方法功能描述
      *
      * @param dateTool
+     * @param emailTool
      * @return org.springframework.ai.tool.ToolCallbackProvider
      * @author tmj
-     * @since 2026/6/26 22:15
+     * @since 2026/6/30 20:13
      **/
     @Bean
-    public ToolCallbackProvider registerMCPTools(DateTool dateTool) {
+    public ToolCallbackProvider registerMCPTools(DateTool dateTool, EmailTool emailTool) {
         return MethodToolCallbackProvider
                 .builder()
                 .toolObjects(dateTool)
