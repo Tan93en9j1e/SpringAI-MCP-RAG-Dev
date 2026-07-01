@@ -220,4 +220,47 @@ public class ProductTool {
 
         return productList;
     }
+
+    @Data
+    @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ModifyProductRequest {
+
+        @ToolParam(description = "商品编号", required = false)
+        private String productId;
+        @ToolParam(description = "商品名称", required = false)
+        private String productName;
+        @ToolParam(description = "商品品牌", required = false)
+        private String brand;
+        @ToolParam(description = "商品描述", required = false)
+        private String description;
+        @ToolParam(description = "具体商品价格大小", required = false)
+        private Integer price;
+        @ToolParam(description = "商品库存的数量", required = false)
+        private Integer stock;
+        @ToolParam(description = "商品状态，0-下架，1-上架，2-预售", required = false)
+        private Integer status;
+    }
+
+    @Tool(description = "根据商品编号修改商品信息")
+    public String modifyProduct(ModifyProductRequest modifyProductRequest) {
+
+        log.info(String.format("| 参数: %s", modifyProductRequest.toString()));
+
+        Product product = new Product();
+        BeanUtils.copyProperties(modifyProductRequest, product);
+
+        product.setUpdateTime(LocalDateTime.now());
+
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("product_id", modifyProductRequest.getProductId());
+        int update = productMapper.update(product, queryWrapper);
+
+        if(update <=0){
+            return "商品信息修改失败,或商品不存在";
+        }
+
+        return "商品信息修改成功";
+    }
 }
