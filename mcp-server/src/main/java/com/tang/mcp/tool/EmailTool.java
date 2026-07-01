@@ -54,6 +54,11 @@ public class EmailTool {
         private String message;
     }
 
+    @Tool(description = "查询我的邮件/邮箱地址")
+    public String  getMyEmailAddress(){
+        return "3956842864@qq.com";
+    }
+
     @Tool(description = "给指定邮箱发送邮件，email为收件人邮箱地址, subject为邮件主题, message为邮件内容")
     public void sendMailMessage(EmailRequest emailRequest){
         log.info("发送邮件: {}", emailRequest.toString());

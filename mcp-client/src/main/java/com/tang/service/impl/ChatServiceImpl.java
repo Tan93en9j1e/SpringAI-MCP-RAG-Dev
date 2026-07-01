@@ -11,6 +11,8 @@ import com.tang.utils.SSEServer;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.document.Document;
@@ -39,6 +41,8 @@ public class ChatServiceImpl implements ChatService {
     @Resource
     private SearXngService searXngService;
 
+    private ChatMemory chatMemory;
+
     private String systemPrompt = "You are a helpful assistant.";
 
     //提示词三大模型
@@ -46,9 +50,10 @@ public class ChatServiceImpl implements ChatService {
     //user
     //assistant
 
-    public ChatServiceImpl(ChatClient.Builder clientBuilder, ToolCallbackProvider tools) {
+    public ChatServiceImpl(ChatClient.Builder clientBuilder, ToolCallbackProvider tools, ChatMemory chatMemory) {
         this.chatClient = clientBuilder
                 .defaultToolCallbacks(tools)
+                .defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build())
 //                .defaultSystem(systemPrompt)
                 .build();
     }
