@@ -44,7 +44,7 @@ public class EmailTool {
     @ToString
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class EmailRequest{
+    public static class EmailRequest {
 
         @ToolParam(description = "收件人邮箱地址")
         private String email;
@@ -52,27 +52,36 @@ public class EmailTool {
         private String subject;
         @ToolParam(description = "邮件内容")
         private String message;
+
+        @ToolParam(description = "判断邮件内容类型，1为markdown，2为html")
+        private Integer contentType;
     }
 
     @Tool(description = "查询我的邮件/邮箱地址")
-    public String  getMyEmailAddress(){
+    public String getMyEmailAddress() {
         return "3956842864@qq.com";
     }
 
     @Tool(description = "给指定邮箱发送邮件，email为收件人邮箱地址, subject为邮件主题, message为邮件内容")
-    public void sendMailMessage(EmailRequest emailRequest){
+    public void sendMailMessage(EmailRequest emailRequest) {
         log.info("发送邮件: {}", emailRequest.toString());
 
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
 
+        Integer contentType = emailRequest.getContentType();
+
         try {
             helper.setFrom(from);
             helper.setTo(emailRequest.getEmail());
             helper.setSubject(emailRequest.getSubject());
-//            helper.setText(emailRequest.getMessage());
-
-            helper.setText(convertToHtml(emailRequest.getMessage()), true);
+            if (contentType == 1) {
+                helper.setText(convertToHtml(emailRequest.getMessage()), true);
+            } else if (contentType == 2) {
+                helper.setText(emailRequest.getMessage(), true);
+            } else {
+                helper.setText(emailRequest.getMessage());
+            }
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
@@ -83,14 +92,15 @@ public class EmailTool {
 
     /**
      * TODO:,markdown 转html
-     * @author tmj
-     * @since 2026/7/1 11:56
+     *
      * @param markdownStr
      * @return java.lang.String
+     * @author tmj
+     * @since 2026/7/1 11:56
      **/
-    public static String convertToHtml(String markdownStr){
-        MutableDataSet dataSet=new MutableDataSet();
-        Parser parser =Parser.builder(dataSet).build();
+    public static String convertToHtml(String markdownStr) {
+        MutableDataSet dataSet = new MutableDataSet();
+        Parser parser = Parser.builder(dataSet).build();
         HtmlRenderer htmlRenderer = HtmlRenderer.builder(dataSet).build();
 
         return htmlRenderer.render(parser.parse(markdownStr));
