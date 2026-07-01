@@ -2,6 +2,7 @@ package com.tang;
 
 import com.tang.mcp.tool.DateTool;
 import com.tang.mcp.tool.EmailTool;
+import com.tang.mcp.tool.ProductTool;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
@@ -35,10 +36,10 @@ public class Application {
      * @since 2026/6/30 20:13
      **/
     @Bean
-    public ToolCallbackProvider registerMCPTools(DateTool dateTool, EmailTool emailTool) {
+    public ToolCallbackProvider registerMCPTools(DateTool dateTool, EmailTool emailTool, ProductTool productTool) {
         return MethodToolCallbackProvider
                 .builder()
-                .toolObjects(dateTool)
+                .toolObjects(dateTool, emailTool, productTool)
                 .build();
     }
 }
