@@ -1,5 +1,8 @@
 package com.tang.mcp.tool;
 
+import com.vladsch.flexmark.html.HtmlRenderer;
+import com.vladsch.flexmark.parser.Parser;
+import com.vladsch.flexmark.util.data.MutableDataSet;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.AllArgsConstructor;
@@ -61,15 +64,30 @@ public class EmailTool {
         try {
             helper.setFrom(from);
             helper.setTo(emailRequest.getEmail());
-            helper.setSubject(emailRequest.subject);
-            helper.setText(emailRequest.message);
+            helper.setSubject(emailRequest.getSubject());
+//            helper.setText(emailRequest.getMessage());
+
+            helper.setText(convertToHtml(emailRequest.getMessage()), true);
 
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
 //            throw new RuntimeException(e);
             log.error("发送邮件失败: {}", e.getMessage());
         }
+    }
 
+    /**
+     * TODO:,markdown 转html
+     * @author tmj
+     * @since 2026/7/1 11:56
+     * @param markdownStr
+     * @return java.lang.String
+     **/
+    public static String convertToHtml(String markdownStr){
+        MutableDataSet dataSet=new MutableDataSet();
+        Parser parser =Parser.builder(dataSet).build();
+        HtmlRenderer htmlRenderer = HtmlRenderer.builder(dataSet).build();
 
+        return htmlRenderer.render(parser.parse(markdownStr));
     }
 }
