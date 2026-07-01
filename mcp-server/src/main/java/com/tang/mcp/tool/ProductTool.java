@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.beans.BeanUtils;
@@ -162,6 +163,61 @@ public class ProductTool {
     public List<Product> queryProductListByCondition(QueryProductRequest queryProductRequest) {
         log.info(String.format("| 参数: %s", queryProductRequest.toString()));
 
-        return null;
+        String productId = queryProductRequest.getProductId();
+        String productName = queryProductRequest.getProductName();
+        String brand = queryProductRequest.getBrand();
+
+        Integer status = queryProductRequest.getStatus();
+        ListSortEnum sortEnum = queryProductRequest.getSortEnum();
+
+        Integer price = queryProductRequest.getPrice();
+        PriceCompareEnum priceCompareEnum = queryProductRequest.getPriceCompareEnum();
+
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+
+        if (StringUtils.isNoneBlank(productId)) {
+            queryWrapper.eq("product_id", productId);
+        }
+        if (StringUtils.isNoneBlank(productName)) {
+            queryWrapper.like("product_name", productName);
+        }
+        if (StringUtils.isNoneBlank(brand)) {
+            queryWrapper.like("brand", brand);
+        }
+        if (status != null) {
+            queryWrapper.eq("status", status);
+        }
+        if (price != null && priceCompareEnum != null) {
+            if (priceCompareEnum.type.equals(PriceCompareEnum.GREATER_THAN.type)) {
+                queryWrapper.gt("price", price);
+            } else if (priceCompareEnum.type.equals(PriceCompareEnum.LESS_THAN.type)) {
+                queryWrapper.lt("price", price);
+            } else if (priceCompareEnum.type.equals(PriceCompareEnum.GREATER_THAN_OR_EQUAL_TO.type)) {
+                queryWrapper.ge("price", price);
+            } else if (priceCompareEnum.type.equals(PriceCompareEnum.LESS_THAN_OR_EQUAL_TO.type)) {
+                queryWrapper.le("price", price);
+            } else if (priceCompareEnum.type.equals(PriceCompareEnum.HIGHER_THAN.type)) {
+                queryWrapper.gt("price", price);
+            } else if (priceCompareEnum.type.equals(PriceCompareEnum.LOWER_THAN.type)) {
+                queryWrapper.lt("price", price);
+            } else if (priceCompareEnum.type.equals(PriceCompareEnum.NOT_HIGHER_THAN.type)) {
+                queryWrapper.le("price", price);
+            } else if (priceCompareEnum.type.equals(PriceCompareEnum.NOT_LOWER_THAN.type)) {
+                queryWrapper.ge("price", price);
+            } else {
+                queryWrapper.eq("price", price);
+            }
+        }
+
+        if (sortEnum != null && sortEnum.type.equals(ListSortEnum.ASC.type)) {
+            queryWrapper.orderByAsc("price");
+        }
+        if (sortEnum != null && sortEnum.type.equals(ListSortEnum.DESC.type)) {
+            queryWrapper.orderByDesc("price");
+        }
+
+        List<Product> productList = productMapper.selectList(queryWrapper);
+
+        return productList;
     }
 }
