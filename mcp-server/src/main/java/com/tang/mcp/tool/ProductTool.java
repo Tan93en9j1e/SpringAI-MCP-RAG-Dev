@@ -1,5 +1,6 @@
 package com.tang.mcp.tool;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.tang.mapper.ProductMapper;
 import com.tang.pojo.Product;
 import jakarta.annotation.Resource;
@@ -13,6 +14,7 @@ import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -71,4 +73,17 @@ public class ProductTool {
         return "商品信息创建成功";
     }
 
+    @Transactional
+    @Tool(description = "根据商品id删除商品记录")
+    public String deleteProductById(String productId) {
+
+        log.info(String.format("| 参数: %s", productId));
+
+        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("product_id", productId);
+
+        productMapper.delete(queryWrapper);
+
+        return "商品信息删除成功";
+    }
 }
